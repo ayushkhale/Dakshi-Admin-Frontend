@@ -1,0 +1,46 @@
+@import "@fortawesome/fontawesome-free/css/all.css";
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Kite+One&family=Noto+Serif+Georgian:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
+.font-Vietnam {
+  font-family: 'Be Vietnam Pro';
+}
+
+.font-Poppins {
+  font-family: 'Poppins';
+}
+
+:root {
+  --background-grid-color: gray;
+  --background-fill-color: #000;
+}
+
+body{
+  background-color: #E5E7EB;
+  font-family: 'Poppins',
+}
+
+.graph-bg {
+  background-color: var(--background-fill-color, #ffffff);
+    background-image:
+        linear-gradient(to bottom, rgb(255, 255, 255) 30%, rgba(255, 255, 255, 0.174) 100%),
+        repeating-linear-gradient(
+            to right,
+            var(--background-grid-color, rgb(255, 255, 255)) 0px,
+            var(--background-grid-color, rgba(255, 255, 255, 0.2)) 1px,
+            transparent 1px,
+            transparent 50px
+        ),
+        repeating-linear-gradient(
+            to bottom,
+            var(--background-grid-color, rgba(255, 255, 255, 0.2)) 0px,
+            var(--background-grid-color, rgba(255, 255, 255, 0.2)) 1px,
+            transparent 1px,
+            transparent 50px
+        );
+    background-size: 100% 100%;
+    background-position: 0 0;
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
