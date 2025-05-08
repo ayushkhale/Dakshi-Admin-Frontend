@@ -6,6 +6,10 @@ const ProfileCard = () => {
   const [profileData, setProfileData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [modalType, setModalType] = useState("error");
+  const [modalTitle, setModalTitle] = useState("");
+  const [modalMessage, setModalMessage] = useState("");
 
   const handleApiError = (error) => {
     if (!error.response) {
@@ -68,7 +72,6 @@ const ProfileCard = () => {
         );
 
         const data = await response.json();
-        console.log(data);
 
         if (!response.ok) {
           const errorMessage = data.message || "Failed to fetch profile data";
@@ -86,36 +89,51 @@ const ProfileCard = () => {
     fetchProfileData();
   }, []);
 
-  if (loading)
+  if (loading) {
     return (
-      <div className="flex justify-center items-center h-32">
+      <div className="flex justify-center items-center h-screen bg-gray-900">
         <div className="w-8 h-8 border-4 border-gray-300 border-t-gray-600 rounded-full animate-spin"></div>
       </div>
     );
+  }
+
   if (error) return <div>Error: {error}</div>;
 
   return (
-    <div className="p-5 bg-white md:p-0">
-      <div className="bg-white rounded-lg w-full max-w-xs flex md:mx-5 my-10 md:my-0 flex-col items-center p-5 h-fit outline-dashed outline-1 outline-gray-400">
+    <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
+      <div className="bg-gray-800 rounded-lg w-full max-w-md flex flex-col items-center p-6 border border-gray-700">
         <img
-          src={profileData?.image || "https://cdn3.iconfinder.com/data/icons/avatars-collection/256/22-512.png"}
-          alt="Profile picture"
-          className="w-24 h-24 md:h-32 md:w-32 rounded-full outline-dashed outline-gray-400 object-cover"
-          />
-        <div className="p-2 text-center">
-          <h2 className="text-lg md:text-xl font-bold">{profileData?.fullName}</h2>
-          <p className="text-gray-600 text-sm">@{ profileData?._id || "N/A"}</p>
-          <p className="text-gray-700 mt-2 text-sm md:text-base">
+          src={
+            profileData?.image ||
+            "https://cdn3.iconfinder.com/data/icons/avatars-collection/256/22-512.png"
+          }
+          alt="Profile"
+          className="w-28 h-28 rounded-full object-cover border-2 border-gray-600"
+        />
+        <div className="text-center mt-4">
+          <h2 className="text-2xl font-bold text-gray-100">
+            {profileData?.fullName}
+          </h2>
+          <p className="text-gray-400 text-sm">@{profileData?._id || "N/A"}</p>
+          <p className="text-gray-300 mt-2 text-sm">
             {profileData?.about || "No bio available"}
           </p>
         </div>
-        <div className="border-t border-gray-300 w-full">
-          <div className="p-2 text-center">
-            <p className="font-bold text-lg">{profileData?.jobTitle}</p>
-            <p className="text-gray-600 text-sm">{profileData?.location}</p>
-          </div>
+        <div className="border-t border-gray-600 w-full mt-4 pt-4 text-center">
+          <p className="font-semibold text-lg text-gray-100">
+            {profileData?.jobTitle}
+          </p>
+          <p className="text-gray-400 text-sm">{profileData?.location}</p>
         </div>
       </div>
+
+      <CustomModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        type={modalType}
+        title={modalTitle}
+        message={modalMessage}
+      />
     </div>
   );
 };
