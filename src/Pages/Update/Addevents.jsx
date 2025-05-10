@@ -51,7 +51,7 @@ const AddEvent = () => {
       });
 
       const response = await axios.post(
-        `${networkconfig.BASE_URL}admin/add-event`,
+        `${networkconfig.BASE_URL}/admin/add-event`,
         formData,
         {
           headers: {

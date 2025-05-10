@@ -12,10 +12,22 @@ const Dashboard = () => {
   ];
 
   const updateCards = [
-    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/9-date-calendar-8048258-6478672.png", label: "Update Events", path: "/addevents" },
-    { src: "https://static.vecteezy.com/system/resources/previews/013/361/136/original/life-insurance-3d-icon-suitable-to-be-used-as-an-additional-element-in-the-design-of-templates-insurance-posters-and-banners-finance-png.png", label: "Update Team Members", path: "/team" },
-    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/oportunidad-8707707-7049613.png", label: "Update Partners Info", path: "/partners" },
-    { src: "https://static.vecteezy.com/system/resources/previews/010/337/234/original/gallery-illustration-3d-png.png", label: "Update Gallery", path: "/addprograms" },
+    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/9-date-calendar-8048258-6478672.png", label: "Add Events", path: "/addevents" },
+    { src: "https://static.vecteezy.com/system/resources/previews/013/361/136/original/life-insurance-3d-icon-suitable-to-be-used-as-an-additional-element-in-the-design-of-templates-insurance-posters-and-banners-finance-png.png", label: "Add Team Members", path: "/team" },
+    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/oportunidad-8707707-7049613.png", label: "Add Partners Info", path: "/partners" },
+    { src: "https://static.vecteezy.com/system/resources/previews/010/337/234/original/gallery-illustration-3d-png.png", label: "Add Pictures", path: "/addprograms" },
+  ];
+
+  const DeleteCards = [
+    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/9-date-calendar-8048258-6478672.png", label: "Delete Events", path: "/delete-events" },
+    { src: "https://static.vecteezy.com/system/resources/previews/013/361/136/original/life-insurance-3d-icon-suitable-to-be-used-as-an-additional-element-in-the-design-of-templates-insurance-posters-and-banners-finance-png.png", label: "Delete Team Members", path: "/delete-team" },
+    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/oportunidad-8707707-7049613.png", label: "Delete Partners Info", path: "/delete-partners" },
+    { src: "https://static.vecteezy.com/system/resources/previews/010/337/234/original/gallery-illustration-3d-png.png", label: "Delete Pictures", path: "/delete-programs" },
+  ];
+
+
+  const DocCards = [
+    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/9-date-calendar-8048258-6478672.png", label: "Add Events", path: "/addevents" },
   ];
 
   const responseCards = [
@@ -24,33 +36,35 @@ const Dashboard = () => {
   ];
 
   const renderSection = (title, cards) => (
-    <>
-      <h2 className="text-xl md:text-2xl text-white font-semibold mb-4">{title}</h2>
-      <section className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 place-items-center mb-10">
+    <div className="mb-10 w-full">
+      <h2 className="text-xl sm:text-2xl text-white font-semibold mb-4">{title}</h2>
+      <section className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-6">
         {cards.map((card, index) => (
           <div
             key={index}
             onClick={() => navigate(card.path)}
-            className="h-[200px] w-[280px] bg-gray-800 border border-gray-700 p-4 rounded-lg flex flex-col items-center justify-center hover:scale-95 transition-transform duration-300 cursor-pointer"
+            className="w-full max-w-[300px] mx-auto bg-gray-800 border border-gray-700 p-5 rounded-lg flex flex-col items-center justify-center hover:scale-[0.97] transition-transform duration-300 cursor-pointer"
           >
             <img
               src={card.src}
               alt={`${card.label} Icon`}
-              className="mb-3 w-[80px] h-[80px] object-contain"
+              className={`mb-3 w-[70px] h-[70px] sm:w-[80px] sm:h-[80px] object-contain ${title === 'Delete' ? 'filter grayscale' : ''}`}
             />
-            <span className="text-lg text-center font-medium text-gray-100">
+            <span className="text-base sm:text-lg text-center font-medium text-gray-100">
               {card.label}
             </span>
           </div>
         ))}
       </section>
-    </>
+    </div>
   );
 
   return (
-    <div className="bg-gray-900 px-4 md:px-10 py-10 min-h-[80vh] rounded-b-lg">
+    <div className="bg-gray-900 px-4 sm:px-6 md:px-10 py-10 min-h-screen rounded-b-lg">
       {renderSection("Generate", generateCards)}
-      {renderSection("Update", updateCards)}
+      {renderSection("Add", updateCards)}
+      {renderSection("Delete", DeleteCards)}
+      {renderSection("Docs", DocCards)}
       {renderSection("Responses", responseCards)}
     </div>
   );
