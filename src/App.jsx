@@ -12,7 +12,6 @@ import Dashboard from "./Pages/Dashboard";
 import ProfileCard from "./Components/ProfileCard";
 import EditProfile from "./Components/Editprofile";
 
-import DocViewer from "../src/Pages/Docs/DocViewer";
 import AllOffer from "./Pages/Docs/AllOffer";
 import AllInvoices from "./Pages/Docs/AllInvoices";
 import AllCertificates from "./Pages/Docs/AllCertificates";
@@ -67,7 +66,6 @@ const AppWrapper = () => {
       
           <Route element={<ProtectedRoute />}>
             <Route path="/dashboard" element={<Dashboard />} />
-            <Route path="/docs" element={<DocViewer />} />
 
             <Route path="/certificate" element={<Certificate />} />
             <Route path="/generate-id" element={<GenerateID />} />
@@ -97,7 +95,6 @@ const AppWrapper = () => {
 
     
           </Route>
-
           <Route path="*" element={isAuthenticated ? <Dashboard /> : <Login />} />
         </Routes>
       </main>

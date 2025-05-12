@@ -11,6 +11,9 @@ const DeletePartner = () => {
   const [modalMessage, setModalMessage] = useState("");
   const [modalType, setModalType] = useState("error");
 
+  const [showConfirm, setShowConfirm] = useState(false);
+  const [partnerToDelete, setPartnerToDelete] = useState(null);
+
   const fetchPartners = async () => {
     setLoading(true);
     try {
@@ -38,8 +41,15 @@ const DeletePartner = () => {
     }
   };
 
-  const handleDelete = async (id) => {
+  const confirmDelete = (partner) => {
+    setPartnerToDelete(partner);
+    setShowConfirm(true);
+  };
+
+  const handleDeleteConfirmed = async () => {
     setLoading(true);
+    const id = partnerToDelete.id;
+    setShowConfirm(false);
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
@@ -71,6 +81,7 @@ const DeletePartner = () => {
     } finally {
       setLoading(false);
       setModalOpen(true);
+      setPartnerToDelete(null);
     }
   };
 
@@ -108,11 +119,11 @@ const DeletePartner = () => {
             <p className="text-xs text-gray-500 mt-1">Contact: {partner.contactPerson}</p>
             <p className="text-xs text-gray-500">Email: {partner.email}</p>
             <button
-              onClick={() => handleDelete(partner.id)}
+              onClick={() => confirmDelete(partner)}
               disabled={loading}
               className="mt-3 bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md w-full"
             >
-              {loading ? "Deleting..." : "Delete"}
+              Delete
             </button>
           </div>
         ))}
@@ -126,6 +137,31 @@ const DeletePartner = () => {
           message={modalMessage}
           type={modalType}
         />
+      )}
+
+      {showConfirm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 p-6 rounded shadow-lg w-11/12 max-w-sm">
+            <h3 className="text-xl font-semibold mb-4 text-white">Confirm Deletion</h3>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to delete {partnerToDelete?.name}?
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => setShowConfirm(false)}
+                className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded text-white"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDeleteConfirmed}
+                className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

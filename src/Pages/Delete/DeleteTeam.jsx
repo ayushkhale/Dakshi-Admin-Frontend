@@ -19,7 +19,7 @@ const DeleteTeam = () => {
     try {
       const token = localStorage.getItem("token");
       const response = await axios.get(`${networkconfig.BASE_URL}/get-team-members`, {
-        headers: { Authorization: `Bearer ${token}` }
+        headers: { Authorization: `Bearer ${token}` },
       });
 
       if (response.data.success) {
@@ -58,8 +58,8 @@ const DeleteTeam = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`
-          }
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
 
@@ -67,7 +67,7 @@ const DeleteTeam = () => {
         setModalTitle("Member Deleted");
         setModalMessage("Team member has been successfully deleted.");
         setModalType("success");
-        setTeamData(prev => prev.filter(member => member.id !== selectedMember.id));
+        setTeamData((prev) => prev.filter((member) => member.id !== selectedMember.id));
       } else {
         setModalTitle("Delete Failed");
         setModalMessage(response.data.message || "Could not delete the member.");
@@ -103,7 +103,11 @@ const DeleteTeam = () => {
       <div className="flex flex-wrap justify-center gap-6">
         {teamData.map((member) => (
           <div key={member._id} className="bg-[#1f2937] p-4 rounded-lg shadow-md w-64">
-            <img src={member.image} alt={member.name} className="w-full h-40 object-cover rounded-md mb-3 border border-gray-700" />
+            <img
+              src={member.image}
+              alt={member.name}
+              className="w-full h-40 object-cover rounded-md mb-3 border border-gray-700"
+            />
             <h3 className="text-lg font-bold">{member.name}</h3>
             <p className="text-sm text-gray-400 mb-1">{member.role}</p>
             <p className="text-sm text-gray-400 mb-3">{member.description}</p>
@@ -129,16 +133,31 @@ const DeleteTeam = () => {
       )}
 
       {confirmOpen && selectedMember && (
-        <CustomModal
-          isOpen={confirmOpen}
-          onClose={() => setConfirmOpen(false)}
-          title="Confirm Delete"
-          message={`Are you sure you want to delete "${selectedMember.name}"?`}
-          type="warning"
-          onConfirm={handleDelete}
-          confirmText="Yes, Delete"
-          cancelText="Cancel"
-        />
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+          <div className="bg-gray-800 p-6 rounded shadow-lg w-11/12 max-w-sm">
+            <h3 className="text-xl font-semibold mb-4 text-white">Confirm Deletion</h3>
+            <p className="text-gray-300 mb-6">
+              Are you sure you want to delete <span className="font-bold text-red-400">{selectedMember.name}</span>?
+            </p>
+            <div className="flex justify-end gap-4">
+              <button
+                onClick={() => {
+                  setConfirmOpen(false);
+                  setSelectedMember(null);
+                }}
+                className="bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded text-white"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleDelete}
+                className="bg-red-600 hover:bg-red-700 px-4 py-2 rounded text-white"
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

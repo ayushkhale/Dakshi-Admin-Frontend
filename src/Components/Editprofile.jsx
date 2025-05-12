@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import networkconfig from "../Dynamics/networkconfig";
 import CustomModal from "./CustomModal";
 
@@ -10,13 +11,13 @@ const Editprofile = () => {
     about: "",
     image: null,
   });
+  const [imagePreview, setImagePreview] = useState(null);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalMessage, setModalMessage] = useState("");
   const [modalType, setModalType] = useState("");
-  const [imagePreview, setImagePreview] = useState(null);
 
   const handleApiError = (error) => {
     if (!error.response) {
@@ -27,40 +28,74 @@ const Editprofile = () => {
       switch (status) {
         case 400:
           setModalTitle("Bad Request");
-          setModalMessage("Invalid credentials.");
+          setModalMessage("Invalid input.");
           break;
         case 401:
           setModalTitle("Unauthorized");
-          setModalMessage("Incorrect username or password.");
+          setModalMessage("Please login again.");
           break;
         case 403:
-          setModalTitle("Access Denied");
-          setModalMessage("You don't have permission.");
+          setModalTitle("Forbidden");
+          setModalMessage("You don't have access.");
           break;
         case 404:
           setModalTitle("Not Found");
-          setModalMessage("User not found.");
+          setModalMessage("Profile not found.");
           break;
         case 500:
           setModalTitle("Server Error");
-          setModalMessage("Please try again later.");
+          setModalMessage("Something went wrong.");
           break;
         default:
           setModalTitle("Error");
-          setModalMessage("Something went wrong.");
-          break;
+          setModalMessage("Unexpected error occurred.");
       }
     }
     setModalType("error");
     setModalOpen(true);
   };
 
+  useEffect(() => {
+    const fetchProfile = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          setModalTitle("Unauthorized");
+          setModalMessage("Please log in.");
+          setModalType("error");
+          setModalOpen(true);
+          return;
+        }
+
+        const response = await axios.get(`${networkconfig.BASE_URL}/admin/get-profile`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        const profile = response.data.profile;
+        setFormData({
+          fullName: profile.fullName || "",
+          jobTitle: profile.jobTitle || "",
+          location: profile.location || "",
+          about: profile.about || "",
+          image: null,
+        });
+
+        if (profile.image) {
+          setImagePreview(profile.image);
+        }
+      } catch (error) {
+        handleApiError(error);
+      }
+    };
+
+    fetchProfile();
+  }, []);
 
   useEffect(() => {
     if (formData.image) {
       const objectUrl = URL.createObjectURL(formData.image);
       setImagePreview(objectUrl);
-      return () => URL.revokeObjectURL(objectUrl); // Cleanup
+      return () => URL.revokeObjectURL(objectUrl);
     }
   }, [formData.image]);
 
@@ -79,9 +114,18 @@ const Editprofile = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setError("");
 
-    let formDataToSend = new FormData();
+    const token = localStorage.getItem("token");
+    if (!token) {
+      setModalTitle("Unauthorized");
+      setModalMessage("Please log in.");
+      setModalType("error");
+      setModalOpen(true);
+      setLoading(false);
+      return;
+    }
+
+    const formDataToSend = new FormData();
     formDataToSend.append("fullName", formData.fullName);
     formDataToSend.append("jobTitle", formData.jobTitle);
     formDataToSend.append("location", formData.location);
@@ -91,54 +135,37 @@ const Editprofile = () => {
     }
 
     try {
-      const token = localStorage.getItem("token");
-      if (!token) {
-        setModalTitle("Unauthorized");
-        setModalMessage("Please Log In");
-        setModalType("error");
-        setModalOpen(true);
-        setLoading(false);
-        return;
-      }
-      const response = await fetch(`${networkconfig.BASE_URL}/admin/profile`, {
-        method: "POST",
-        headers: {
-          authorization: `Bearer ${token}`,
-        },
-        body: formDataToSend,
-      });
+      const response = await axios.post(
+        `${networkconfig.BASE_URL}/admin/profile`,
+        formDataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          }
+        }
+      );
 
-      if (!response.ok) {
-        throw new Error("Failed to upload data");
-      }
-
-      setModalTitle("Updated");
-      setModalMessage("Profile Updated Successfully !!");
+      setModalTitle("Success");
+      setModalMessage("Profile updated successfully.");
       setModalType("success");
       setModalOpen(true);
     } catch (error) {
       handleApiError(error);
     } finally {
-      setLoading(false)
-      setFormData({
-        fullName: "",
-        jobTitle: "",
-        location: "",
-        about: "",
-        image: null,
-      });
+      setLoading(false);
     }
   };
 
   return (
-    <div className="container bg-white px-5 py-5 flex justify-center items-baseline md:h-[80vh] rounded-b-lg">
-      <div className="bg-white w-full max-w-4xl">
-        <h1 className="text-center text-2xl font-bold mb-6">EDIT PROFILE</h1>
+    <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center px-4 py-8">
+      <div className="bg-gray-800 rounded-lg shadow-lg w-full max-w-5xl p-8">
+        <h1 className="text-3xl font-bold text-center mb-8">Edit Profile</h1>
+
         <form onSubmit={handleSubmit}>
-          <div className="flex flex-wrap -mx-4">
-            <div className="w-full md:w-1/3 px-4 mb-4 md:mb-0">
-              <div className="border-2 border-black h-full flex items-center justify-center">
-                <label className="cursor-pointer text-center">
+          <div className="flex flex-col md:flex-row gap-8">
+            <div className="w-full md:w-1/3 px-4">
+              <div className="border-2 border-gray-600 h-full flex items-center justify-center bg-gray-900 rounded-lg">
+                <label className="cursor-pointer flex flex-col items-center justify-center w-full h-full text-gray-300">
                   <input
                     type="file"
                     accept="image/*"
@@ -146,83 +173,90 @@ const Editprofile = () => {
                     className="hidden"
                   />
                   {imagePreview ? (
-                    <img src={imagePreview} alt="Selected" className="h-32 w-32 object-cover" />
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="h-32 w-32 object-cover rounded-full border-2 border-gray-700"
+                    />
                   ) : (
                     <>
-                      <span>UPLOAD IMAGE HERE</span>
-                      <pre className="text-xs text-red-700">Square Image of ratio 1:1</pre>
+                      <span className="text-sm font-medium">
+                        UPLOAD IMAGE HERE
+                      </span>
+                      <pre className="text-xs text-red-400">
+                        Square Image of ratio 1:1
+                      </pre>
                     </>
                   )}
                 </label>
               </div>
             </div>
-            <div className="w-full md:w-2/3 px-4">
-              <div className="bg-gray-200 p-4 border-2 border-black">
-                <div className="mb-4">
-                  <label className="block font-bold mb-1">FULL NAME</label>
+
+            <div className="md:w-2/3 space-y-6">
+              <div>
+                <label className="block text-sm mb-1">Full Name</label>
+                <input
+                  type="text"
+                  name="fullName"
+                  value={formData.fullName}
+                  onChange={handleChange}
+                  className="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2"
+                />
+              </div>
+
+              <div className="flex gap-4">
+                <div className="w-1/2">
+                  <label className="block text-sm mb-1">Job Title</label>
                   <input
                     type="text"
-                    name="fullName"
-                    value={formData.fullName}
+                    name="jobTitle"
+                    value={formData.jobTitle}
                     onChange={handleChange}
-                    className="w-full border-b-2 border-black p-1"
+                    className="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2"
                   />
                 </div>
-                <div className="flex flex-wrap -mx-2 mb-4">
-                  <div className="w-full md:w-1/2 px-2 mb-4 md:mb-0">
-                    <label className="block font-bold mb-1">JOB TITLE</label>
-                    <input
-                      type="text"
-                      name="jobTitle"
-                      value={formData.jobTitle}
-                      onChange={handleChange}
-                      className="w-full border-b-2 border-black p-1"
-                    />
-                  </div>
-                  <div className="w-full md:w-1/2 px-2">
-                    <label className="block font-bold mb-1">LOCATION</label>
-                    <input
-                      type="text"
-                      name="location"
-                      value={formData.location}
-                      onChange={handleChange}
-                      className="w-full border-b-2 border-black p-1"
-                    />
-                  </div>
-                </div>
-                <div className="mb-4">
-                  <label className="block font-bold mb-1">ABOUT</label>
-                  <textarea
-                    name="about"
-                    value={formData.about}
+                <div className="w-1/2">
+                  <label className="block text-sm mb-1">Location</label>
+                  <input
+                    type="text"
+                    name="location"
+                    value={formData.location}
                     onChange={handleChange}
-                    className="w-full border-2 border-black p-2"
+                    className="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2"
                   />
-                </div>
-                <div className="text-center w-full">
-                  <button
-                    type="submit"
-                    className="w-full py-2 bg-gray-700 text-white font-semibold hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-400"
-                  >
-                    {loading ? "Updating..." : "Update Profile"}
-                  </button>
                 </div>
               </div>
+
+              <div>
+                <label className="block text-sm mb-1">About</label>
+                <textarea
+                  name="about"
+                  value={formData.about}
+                  onChange={handleChange}
+                  className="w-full bg-gray-700 border border-gray-600 rounded px-4 py-2 h-28 resize-none"
+                />
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-indigo-600 hover:bg-indigo-500 transition py-2 rounded font-semibold"
+              >
+                {loading ? "Updating..." : "Update Profile"}
+              </button>
             </div>
           </div>
         </form>
       </div>
 
-      {modalOpen && (
-        <CustomModal
-          isOpen={modalOpen}
-          onClose={() => setModalOpen(false)}
-          title={modalTitle}
-          message={modalMessage}
-          type={modalType}
-        />
-      )}
-    </div>  
+      <CustomModal
+        isOpen={modalOpen}
+        onClose={() => setModalOpen(false)}
+        title={modalTitle}
+        message={modalMessage}
+        type={modalType}
+      />
+    </div>
   );
 };
 
