@@ -12,8 +12,9 @@ const Editprofile = () => {
     image: null,
   });
   const [imagePreview, setImagePreview] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [existingImageUrl, setExistingImageUrl] = useState("");
 
+  const [loading, setLoading] = useState(false);
   const [modalOpen, setModalOpen] = useState(false);
   const [modalTitle, setModalTitle] = useState("");
   const [modalMessage, setModalMessage] = useState("");
@@ -82,6 +83,7 @@ const Editprofile = () => {
 
         if (profile.image) {
           setImagePreview(profile.image);
+          setExistingImageUrl(profile.image);
         }
       } catch (error) {
         handleApiError(error);
@@ -96,8 +98,10 @@ const Editprofile = () => {
       const objectUrl = URL.createObjectURL(formData.image);
       setImagePreview(objectUrl);
       return () => URL.revokeObjectURL(objectUrl);
+    } else {
+      setImagePreview(existingImageUrl);
     }
-  }, [formData.image]);
+  }, [formData.image, existingImageUrl]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -130,6 +134,7 @@ const Editprofile = () => {
     formDataToSend.append("jobTitle", formData.jobTitle);
     formDataToSend.append("location", formData.location);
     formDataToSend.append("about", formData.about);
+
     if (formData.image) {
       formDataToSend.append("image", formData.image);
     }
@@ -141,7 +146,7 @@ const Editprofile = () => {
         {
           headers: {
             Authorization: `Bearer ${token}`,
-          }
+          },
         }
       );
 
