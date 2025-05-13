@@ -26,6 +26,10 @@ const SlipGenerator = () => {
     ITEM_2_QTY: "",
     ITEM_3_QTY: "",
     ITEM_4_QTY: "",
+    ITEM_1_GST: "",
+    ITEM_2_GST: "",
+    ITEM_3_GST: "",
+    ITEM_4_GST: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -42,7 +46,7 @@ const SlipGenerator = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-  
+
     const payload = {
       ADVANCE_DEPOSITE: Number(form.ADVANCE_DEPOSITE),
       MOBILE: form.MOBILE,
@@ -64,9 +68,13 @@ const SlipGenerator = () => {
       ITEM_1_QTY: form.ITEM_1_QTY,
       ITEM_2_QTY: form.ITEM_2_QTY,
       ITEM_3_QTY: form.ITEM_3_QTY,
-      ITEM_4_QTY: form.ITEM_4_QTY
+      ITEM_4_QTY: form.ITEM_4_QTY,
+      ITEM_1_GST: form.ITEM_1_GST,
+      ITEM_2_GST: form.ITEM_2_GST,
+      ITEM_3_GST: form.ITEM_3_GST,
+      ITEM_4_GST: form.ITEM_4_GST,
     };
-  
+
     try {
       const token = localStorage.getItem("token");
       const response = await axios.post(
@@ -80,11 +88,9 @@ const SlipGenerator = () => {
         }
       );
 
-      console.log(form);
-  
       if (response.data.success && response.data.redirect_url) {
         window.open(response.data.redirect_url, "_blank");
-  
+
         setModalTitle("Slip Generated");
         setModalMessage("Invoice slip has been successfully generated.");
         setModalType("success");
@@ -111,6 +117,10 @@ const SlipGenerator = () => {
           ITEM_2_QTY: "",
           ITEM_3_QTY: "",
           ITEM_4_QTY: "",
+          ITEM_1_GST: "",
+          ITEM_2_GST: "",
+          ITEM_3_GST: "",
+          ITEM_4_GST: "",
         });
       } else {
         setModalTitle("Failed");
@@ -128,7 +138,7 @@ const SlipGenerator = () => {
       setModalOpen(true);
     }
   };
-  
+
   return (
     <div className="bg-[#111827] min-h-screen px-4 py-10 flex justify-center">
       <form
@@ -139,47 +149,33 @@ const SlipGenerator = () => {
           Invoice Slip Generator
         </h2>
 
+        {/* Invoice Info */}
         <div>
           <h3 className="text-2xl font-semibold mb-4 border-b border-gray-700 pb-2">
             Invoice Info
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div>
-              <label className="block mb-1 text-sm font-medium">Invoice Date</label>
-              <input
-                type="date"
-                name="INVOICE_DATE"
-                value={form.INVOICE_DATE}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600"
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-1 text-sm font-medium">Due Date</label>
-              <input
-                type="date"
-                name="DUE_DATE"
-                value={form.DUE_DATE}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600"
-                required
-              />
-            </div>
-            <div>
-              <label className="block mb-1 text-sm font-medium">Advance Deposite</label>
-              <input
-                type="number"
-                name="ADVANCE_DEPOSITE"
-                value={form.ADVANCE_DEPOSITE}
-                onChange={handleChange}
-                className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600"
-                required
-              />
-            </div>
+            {[
+              ["INVOICE_DATE", "Invoice Date", "date"],
+              ["DUE_DATE", "Due Date", "date"],
+              ["ADVANCE_DEPOSITE", "Advance Deposite", "number"],
+            ].map(([name, label, type]) => (
+              <div key={name}>
+                <label className="block mb-1 text-sm font-medium">{label}</label>
+                <input
+                  type={type}
+                  name={name}
+                  value={form[name]}
+                  onChange={handleChange}
+                  className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600"
+                  required
+                />
+              </div>
+            ))}
           </div>
         </div>
 
+        {/* Customer Details */}
         <div>
           <h3 className="text-2xl font-semibold mb-4 border-b border-gray-700 pb-2">
             Customer Details
@@ -220,12 +216,13 @@ const SlipGenerator = () => {
           </div>
         </div>
 
+        {/* Item Details */}
         <div>
           <h3 className="text-2xl font-semibold mb-4 border-b border-gray-700 pb-2">
             Item Details
           </h3>
           {[1, 2, 3, 4].map((i) => (
-            <div key={i} className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+            <div key={i} className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
               <div>
                 <label className="block mb-1 text-sm font-medium">Item {i} Name</label>
                 <input
@@ -252,6 +249,16 @@ const SlipGenerator = () => {
                   type="number"
                   name={`ITEM_${i}_QTY`}
                   value={form[`ITEM_${i}_QTY`]}
+                  onChange={handleChange}
+                  className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600"
+                />
+              </div>
+              <div>
+                <label className="block mb-1 text-sm font-medium">Item {i} GST</label>
+                <input
+                  type="text"
+                  name={`ITEM_${i}_GST`}
+                  value={form[`ITEM_${i}_GST`]}
                   onChange={handleChange}
                   className="w-full p-3 rounded-lg bg-gray-800 text-white border border-gray-600"
                 />
