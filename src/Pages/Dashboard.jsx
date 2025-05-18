@@ -31,7 +31,7 @@ const Dashboard = () => {
     { src: "https://i.ibb.co/YGFbGBR/IDcard.png", label: "All ID Cards", path: "/all-IdCards" },
     { src: "https://cdn3d.iconscout.com/3d/premium/thumb/folder-project-management-7220449-5888930.png", label: "All Invoices", path: "/all-Invoices" },
     { src: "https://cdn3d.iconscout.com/3d/premium/thumb/tax-6352284-5230861.png", label: "All Offer Letters", path: "/all-offer-letter" },
-    { src: "https://i.ibb.co/YGFbGBR/IDcard.png", label: "All ID Cards", path: "/all-events" },
+    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/9-date-calendar-8048258-6478672.png", label: "All Events", path: "/all-events" },
   ];
 
   const responseCards = [
