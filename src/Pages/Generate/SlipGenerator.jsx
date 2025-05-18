@@ -91,8 +91,8 @@ const SlipGenerator = () => {
       if (response.data.success && response.data.redirect_url) {
         window.open(response.data.redirect_url, "_blank");
 
-        setModalTitle("Slip Generated");
-        setModalMessage("Invoice slip has been successfully generated.");
+        setModalTitle("Invoice Generated");
+        setModalMessage("Invoice has been successfully generated.");
         setModalType("success");
 
         setForm({
@@ -130,7 +130,7 @@ const SlipGenerator = () => {
     } catch (error) {
       setModalTitle("Error");
       setModalMessage(
-        error.response?.data?.message || "Slip generation failed. Try again."
+        error.response?.data?.message || "Invoice generation failed. Try again."
       );
       setModalType("error");
     } finally {
@@ -146,7 +146,7 @@ const SlipGenerator = () => {
         className="bg-[#1f2937] text-white p-8 rounded-xl w-full max-w-6xl space-y-8 shadow-2xl"
       >
         <h2 className="text-4xl font-bold text-center text-white mb-6">
-          Invoice Slip Generator
+          Invoice Generator
         </h2>
 
         {/* Invoice Info */}
@@ -272,7 +272,7 @@ const SlipGenerator = () => {
           disabled={loading}
           className="w-full py-3 bg-blue-600 hover:bg-blue-700 transition rounded-lg font-semibold text-lg"
         >
-          {loading ? "Generating..." : "Generate Slip"}
+          {loading ? "Generating..." : "Generate Invoice"}
         </button>
       </form>
 

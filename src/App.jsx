@@ -92,8 +92,8 @@ const AppWrapper = () => {
             <Route path="/all-IdCards" element={<AllidCards />} />
             <Route path="/all-offer-letter" element={<AllOffer />} />
             <Route path="/all-Invoices" element={<AllInvoices />} />
+            <Route path="/all-events" element={<AllEvents />} />
 
-    
           </Route>
           <Route path="*" element={isAuthenticated ? <Dashboard /> : <Login />} />
         </Routes>

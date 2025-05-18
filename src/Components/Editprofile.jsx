@@ -32,7 +32,7 @@ const Editprofile = () => {
           setModalMessage("Invalid input.");
           break;
         case 401:
-          setModalTitle("Unauthorized");
+          setModalTitle("Unauthorized"); 
           setModalMessage("Please login again.");
           break;
         case 403:

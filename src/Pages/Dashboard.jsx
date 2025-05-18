@@ -8,7 +8,7 @@ const Dashboard = () => {
     { src: "https://i.ibb.co/GQYyrTnF/Certificate.png", label: "Generate Certificate", path: "/certificate" },
     { src: "https://i.ibb.co/YGFbGBR/IDcard.png", label: "Generate ID Card", path: "/generate-id" },
     { src: "https://cdn3d.iconscout.com/3d/premium/thumb/folder-project-management-7220449-5888930.png", label: "Generate Offer Letter", path: "/offer-letter" },
-    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/tax-6352284-5230861.png", label: "Generate Slips", path: "/slip" },
+    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/tax-6352284-5230861.png", label: "Generate Invoice", path: "/slip" },
   ];
 
   const updateCards = [
@@ -27,7 +27,11 @@ const Dashboard = () => {
 
 
   const DocCards = [
-    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/9-date-calendar-8048258-6478672.png", label: "Add Events", path: "/addevents" },
+    { src: "https://i.ibb.co/GQYyrTnF/Certificate.png", label: "All certificates", path: "/all-certificate" },
+    { src: "https://i.ibb.co/YGFbGBR/IDcard.png", label: "All ID Cards", path: "/all-IdCards" },
+    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/folder-project-management-7220449-5888930.png", label: "All Invoices", path: "/all-Invoices" },
+    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/tax-6352284-5230861.png", label: "All Offer Letters", path: "/all-offer-letter" },
+    { src: "https://i.ibb.co/YGFbGBR/IDcard.png", label: "All ID Cards", path: "/all-events" },
   ];
 
   const responseCards = [

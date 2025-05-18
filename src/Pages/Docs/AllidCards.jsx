@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import networkconfig from '../../Dynamics/networkconfig';
 
 const AllIdCards = () => {
   const [idCards, setIdCards] = useState([]);
@@ -9,7 +10,7 @@ const AllIdCards = () => {
   const fetchIdCards = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get('https://demo.dakshifoundation.in/admin/all-idcards', {
+      const response = await axios.get(`${networkconfig.BASE_URL}/admin/all-idcards`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

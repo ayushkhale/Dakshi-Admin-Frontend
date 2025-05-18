@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import networkconfig from '../../Dynamics/networkconfig';
 
 const AllCertificates = () => {
   const [certificates, setCertificates] = useState([]);
@@ -9,7 +10,7 @@ const AllCertificates = () => {
   const fetchCertificates = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await axios.get('https://demo.dakshifoundation.in/admin/all-certificates', {
+      const response = await axios.get(`${networkconfig.BASE_URL}/admin/all-certificates`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
