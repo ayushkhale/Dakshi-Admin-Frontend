@@ -8,7 +8,7 @@ const Dashboard = () => {
     { src: "https://i.ibb.co/GQYyrTnF/Certificate.png", label: "Generate Certificate", path: "/certificate" },
     { src: "https://i.ibb.co/YGFbGBR/IDcard.png", label: "Generate ID Card", path: "/generate-id" },
     { src: "https://cdn3d.iconscout.com/3d/premium/thumb/folder-project-management-7220449-5888930.png", label: "Generate Offer Letter", path: "/offer-letter" },
-    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/tax-6352284-5230861.png", label: "Generate Invoice", path: "/slip" },
+    { src: "https://cdn3d.iconscout.com/3d/premium/thumb/tax-6352284-5230861.png", label: "Generate Invoice", path: "https://invoice.dakshifoundation.in/" },
   ];
 
   const updateCards = [
@@ -46,7 +46,13 @@ const Dashboard = () => {
         {cards.map((card, index) => (
           <div
             key={index}
-            onClick={() => navigate(card.path)}
+            onClick={() => {
+              if (card.path.startsWith('http')) {
+                window.location.href = card.path;
+              } else {
+                navigate(card.path);
+              }
+            }}
             className="w-full max-w-[300px] mx-auto bg-gray-800 border border-gray-700 p-5 rounded-lg flex flex-col items-center justify-center hover:scale-[0.97] transition-transform duration-300 cursor-pointer"
           >
             <img

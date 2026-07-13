@@ -48,19 +48,32 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
     </button>
     {isOpen && (
       <div className="ml-4 space-y-2 mt-1">
-        {items.map((item, index) => (
-          <Link
-            to={item.path}
-            key={index}
-            className={`flex items-center space-x-2 text-gray-300 hover:text-white px-2 py-1 rounded hover:bg-gray-700 ${
-              location.pathname === item.path ? 'bg-gray-700 font-bold' : ''
-            }`}
-            onClick={toggleSidebar}
-          >
-            <i className={`fas fa-${item.icon}`}></i>
-            <span>{item.label}</span>
-          </Link>
-        ))}
+        {items.map((item, index) => {
+          const isExternal = item.path.startsWith('http');
+          return isExternal ? (
+            <a
+              href={item.path}
+              key={index}
+              className="flex items-center space-x-2 text-gray-300 hover:text-white px-2 py-1 rounded hover:bg-gray-700"
+              onClick={toggleSidebar}
+            >
+              <i className={`fas fa-${item.icon}`}></i>
+              <span>{item.label}</span>
+            </a>
+          ) : (
+            <Link
+              to={item.path}
+              key={index}
+              className={`flex items-center space-x-2 text-gray-300 hover:text-white px-2 py-1 rounded hover:bg-gray-700 ${
+                location.pathname === item.path ? 'bg-gray-700 font-bold' : ''
+              }`}
+              onClick={toggleSidebar}
+            >
+              <i className={`fas fa-${item.icon}`}></i>
+              <span>{item.label}</span>
+            </Link>
+          );
+        })}
       </div>
     )}
   </div>
@@ -117,7 +130,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
             { icon: 'certificate', label: 'Certificate', path: '/certificate' },
             { icon: 'address-card', label: 'ID Card', path: '/generate-id' },
             { icon: 'rug', label: 'Offer Letter', path: '/offer-letter' },
-            { icon: 'receipt', label: 'Slip Generator', path: '/slip' },
+            { icon: 'receipt', label: 'Slip Generator', path: 'https://invoice.dakshifoundation.in/' },
           ]}
            icon="plus-square"
 
